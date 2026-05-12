@@ -3,8 +3,7 @@
 **RecruitIQ** is an AI-powered resume-to-job match intelligence platform. Upload a resume and a job description, then get a match score, skill-gap analysis, learning roadmap, and tailored interview questions in one place.
 ## Live Demo
 
-🔗 https://recruitiq-phi.vercel.app/login
-
+🔗 https://recruitt-iq.vercel.app/login
 ## What it does
 
 RecruitIQ helps users:
