@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": { "distDir": "dist" }
+    },
+    {
+      "src": "api/index.py",
+      "use": "@vercel/python",
+      "config": { "maxLambdaSize": "50mb" }
+    }
+  ],
+  "routes": [
+    { "src": "/api/v1/(.*)", "dest": "/api/index.py" },
+    { "src": "/health",      "dest": "/api/index.py" },
+    { "src": "/docs",        "dest": "/api/index.py" },
+    { "src": "/redoc",       "dest": "/api/index.py" },
+    {
+      "src": "/(.*\\.(?:js|css|png|jpg|jpeg|gif|ico|svg|woff2?|ttf|eot|map|webp|avif))",
+      "dest": "/$1"
+    },
+    { "src": "/(.*)", "dest": "/index.html" }
+  ]
+}
