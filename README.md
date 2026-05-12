@@ -1,18 +1,84 @@
 # RecruitIQ
 
-**RecruitIQ** is a resume-to-job match intelligence platform. Upload a resume and a job description, and get instant match scoring, skill gap analysis, a personalized learning roadmap, and tailored interview questions.
+**RecruitIQ** is an AI-powered resume-to-job match intelligence platform. Upload a resume and a job description, then get a match score, skill-gap analysis, learning roadmap, and tailored interview questions in one place.
 
-## Stack
+## What it does
 
-- **Frontend**: React 18 + TypeScript + Vite + Tailwind CSS
-- **Backend**: FastAPI + SQLAlchemy + SQLite (dev) / PostgreSQL (prod)
-- **Deployment**: Vercel (frontend static build + Python serverless functions)
+RecruitIQ helps users:
 
----
+- Upload resumes in **PDF, DOCX, or TXT** format
+- Create and manage job descriptions
+- Compare a resume against a job description
+- View a detailed score breakdown with matching and missing skills
+- Generate a personalized learning roadmap
+- Generate interview questions for preparation
+- Export analysis results as **Markdown** or **PDF**
+- View dashboards and history for past analyses
+
+## Features
+
+- **Resume parsing** with contact info extraction
+- **Job description parsing** with required skill extraction
+- **Semantic matching** and keyword coverage scoring
+- **Skill overlap analysis** for matched / missing / extra skills
+- **Learning roadmap generation** with phases, milestones, and quick wins
+- **Interview prep pack** with technical, behavioral, and system design questions
+- **JWT authentication** for user accounts
+- **Analysis history** and dashboard insights
+- **Export support** for sharing reports
+- **Optional LLM enrichment** when configured with a provider
+
+## Tech Stack
+
+### Frontend
+- React 18
+- TypeScript
+- Vite
+- Tailwind CSS
+- React Router
+- Axios
+- Recharts
+- react-dropzone
+- react-hot-toast
+- Lucide Icons
+
+### Backend
+- FastAPI
+- SQLAlchemy
+- SQLite for local development
+- PostgreSQL for production
+- JWT authentication
+- Pydantic / Pydantic Settings
+- pdfplumber
+- python-docx
+- scikit-learn
+- sentence-transformers
+- structlog
+
+### Deployment
+- Vercel frontend static build
+- Vercel Python serverless API
+
+## How it works
+
+1. A user signs up or logs in.
+2. The user uploads a resume.
+3. The user adds a job description.
+4. RecruitIQ analyzes both documents.
+5. The app returns:
+   - overall match score
+   - semantic score
+   - keyword score
+   - skill overlap
+   - missing skills
+   - suggestions
+   - learning roadmap
+   - interview questions
+6. The user can export the result as Markdown or PDF.
 
 ## Project Structure
 
-```
+```text
 recruitiq/
 ├── api/                  # Vercel serverless entry point
 │   ├── index.py
@@ -22,36 +88,45 @@ recruitiq/
 │   │   ├── api/          # Route handlers
 │   │   ├── core/         # Config, database, security
 │   │   ├── models/       # SQLAlchemy models
-│   │   ├── services/     # Business logic (scoring, parsing, LLM)
+│   │   ├── services/     # Parsing, scoring, roadmap, interview generation
 │   │   └── main.py
 │   ├── tests/
+│   ├── pyproject.toml
 │   └── requirements.txt
-├── frontend/             # Vite + React frontend
+├── frontend/             # Vite + React app
 │   ├── src/
 │   │   ├── components/
 │   │   ├── hooks/
 │   │   ├── pages/
 │   │   └── utils/
 │   └── package.json
-└── vercel.json
+├── vercel.json
+└── README.md
 ```
-
----
 
 ## Local Development
 
-### 1. Backend
+### 1) Backend
 
 ```bash
 cd backend
-python3 -m venv .venv
+python -m venv .venv
+# Windows:
+.venv\Scripts\activate
+# macOS/Linux:
 source .venv/bin/activate
+
 pip install -r requirements.txt
-cp .env.example .env        # edit SECRET_KEY and DATABASE_URL
+copy .env.example .env
 uvicorn app.main:app --reload --port 8000
 ```
 
-### 2. Frontend
+Backend docs:
+- Swagger UI: `http://localhost:8000/docs`
+- ReDoc: `http://localhost:8000/redoc`
+- Health check: `http://localhost:8000/health`
+
+### 2) Frontend
 
 ```bash
 cd frontend
@@ -59,37 +134,118 @@ npm install
 npm run dev
 ```
 
-Frontend runs on `http://localhost:5173` and proxies `/api` to `http://localhost:8000`.
+Frontend runs on `http://localhost:5173`.
 
----
+### 3) Connect frontend to backend
 
-## Deploy to Vercel
+By default, the frontend calls `/api/v1`.
 
-1. Push this repo to GitHub.
-2. Import the project in [vercel.com](https://vercel.com) — select the **root** folder (where `vercel.json` lives).
-3. Set the following **Environment Variables** in Vercel project settings:
+For local development, you can set:
 
-| Variable | Description |
-|---|---|
-| `SECRET_KEY` | Strong random string — `openssl rand -hex 32` |
-| `DATABASE_URL` | Postgres connection string (e.g. from Neon / Supabase) |
-| `ENVIRONMENT` | `production` |
-| `CORS_ORIGINS_STR` | Your Vercel deployment URL(s), comma-separated |
-| `LLM_PROVIDER` *(optional)* | `openai` or `anthropic` |
-| `LLM_API_KEY` *(optional)* | API key for the chosen LLM provider |
-| `LLM_MODEL` *(optional)* | e.g. `gpt-4o-mini` or `claude-haiku-4-5-20251001` |
+```bash
+VITE_API_URL=http://localhost:8000/api/v1
+```
 
-4. Click **Deploy**. Vercel builds the frontend and deploys the Python API as serverless functions automatically.
+or keep the default if you are serving both behind the same domain.
 
-> **Note:** Without `LLM_PROVIDER` / `LLM_API_KEY`, the app operates in rule-based mode (no LLM enrichment) — all core features still work.
+## Environment Variables
 
----
+### Root / production example
 
-## Environment Variables Reference
+Copy `.env.example` to `.env` and fill in the values:
 
-Copy `backend/.env.example` → `backend/.env` for local development.
+```env
+SECRET_KEY=your-strong-secret
+DATABASE_URL=sqlite:///./recruitiq.db
+ENVIRONMENT=production
+CORS_ORIGINS_STR=http://localhost:5173,http://localhost:3000
+LLM_PROVIDER=openai
+LLM_API_KEY=your_api_key
+LLM_MODEL=gpt-4o-mini
+VITE_API_URL=http://localhost:8000/api/v1
+```
 
----
+### Backend env vars
+
+The backend supports these settings:
+
+- `APP_NAME`
+- `DEBUG`
+- `ENVIRONMENT`
+- `SECRET_KEY`
+- `DATABASE_URL`
+- `EMBEDDING_MODEL`
+- `EMBEDDING_DEVICE`
+- `LLM_PROVIDER`
+- `LLM_API_KEY`
+- `LLM_MODEL`
+- `LLM_BASE_URL`
+- `LOG_LEVEL`
+- `CORS_ORIGINS_STR`
+
+### Important notes
+
+- If `LLM_PROVIDER` and `LLM_API_KEY` are not set, RecruitIQ uses a **deterministic rule-based fallback**.
+- Local development uses **SQLite** by default.
+- Production should use a hosted **PostgreSQL** database.
+- Resume uploads support **PDF, DOCX, and TXT** files up to **5 MB**.
+
+## API Endpoints
+
+### Authentication
+- `POST /api/v1/auth/register`
+- `POST /api/v1/auth/login`
+
+### Resumes
+- `POST /api/v1/resumes/upload`
+- `GET /api/v1/resumes/`
+- `DELETE /api/v1/resumes/{resume_id}`
+
+### Job Descriptions
+- `POST /api/v1/jobs/`
+- `GET /api/v1/jobs/`
+- `GET /api/v1/jobs/{job_id}`
+- `DELETE /api/v1/jobs/{job_id}`
+
+### Analysis
+- `POST /api/v1/analysis/`
+- `GET /api/v1/analysis/`
+- `GET /api/v1/analysis/{analysis_id}`
+- `GET /api/v1/analysis/dashboard`
+
+### Export
+- `GET /api/v1/export/{analysis_id}/markdown`
+- `GET /api/v1/export/{analysis_id}/pdf`
+
+### Meta
+- `GET /health`
+- `GET /docs`
+- `GET /redoc`
+
+## Deployment on Vercel
+
+1. Push this repository to GitHub.
+2. Import the project in Vercel.
+3. Use the **root** folder as the project root.
+4. Add the required environment variables in Vercel settings.
+5. Deploy.
+
+The `vercel.json` file configures:
+
+- the React frontend as a static build
+- the FastAPI backend as Python serverless functions
+- routing for `/api/v1`, `/docs`, `/redoc`, and `/health`
+
+## Testing
+
+Backend tests are included under `backend/tests/`.
+
+Run them with:
+
+```bash
+cd backend
+pytest
+```
 
 ## License
 
