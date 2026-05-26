@@ -76,7 +76,7 @@ RecruitIQ helps users:
    - suggestions
    - learning roadmap
    - interview questions
-6. The user can export the result as Markdown or PDF.
+6. The user can export the result as Markdown or PDF format.
 
 ## Project Structure
 
