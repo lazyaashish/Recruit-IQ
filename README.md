@@ -8,7 +8,7 @@
 
 RecruitIQ helps users:
 
-- Upload resumes in **PDF, DOCX, or TXT** format
+- Upload resumes in **PDF, DOCX, or TXT**
 - Create and manage job descriptions
 - Compare a resume against a job description
 - View a detailed score breakdown with matching and missing skills
