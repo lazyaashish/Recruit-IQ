@@ -28,8 +28,7 @@ RecruitIQ helps users:
 - **JWT authentication** for user accounts
 - **Analysis history** and dashboard insights
 - **Export support** for sharing reports
-- **Optional LLM enrichment** when configured with a provider
-
+- **Optional LLM enrichment** when configured
 ## Tech Stack
 
 ### Frontend
