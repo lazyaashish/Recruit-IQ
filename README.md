@@ -24,7 +24,7 @@ RecruitIQ helps users:
 - **Semantic matching** and keyword coverage scoring
 - **Skill overlap analysis** for matched / missing / extra skills
 - **Learning roadmap generation** with phases, milestones, and quick wins
-- **Interview prep pack** with technical, behavioral, and system design questions
+- **Interview prep pack** with technical, behavioral, and system design
 - **JWT authentication** for user accounts
 - **Analysis history** and dashboard insights
 - **Export support** for sharing reports
