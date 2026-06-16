@@ -234,7 +234,7 @@ The backend supports these settings:
 The `vercel.json` file configures:
 
 - the React frontend as a static build
-- the FastAPI backend as Python serverless functions
+- the FastAPI backend as Python serverless
 - routing for `/api/v1`, `/docs`, `/redoc`, and `/health`
 
 ## Testing
