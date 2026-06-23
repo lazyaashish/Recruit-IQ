@@ -13,7 +13,7 @@ RecruitIQ helps users:
 - Compare a resume against a job description
 - View a detailed score breakdown with matching and missing skills
 - Generate a personalized learning roadmap
-- Generate interview questions for preparation
+- Generate interview questions.
 - Export analysis results as **Markdown** or **PDF**
 - View dashboards and history for past analyses
 
